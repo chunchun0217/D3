@@ -8,15 +8,15 @@
 <body>
 <script type="text/javascript">
 	var width = 1024;
-var height = 500;
+var height = 768;
 var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
 d3.csv("./information.csv", 
 	function(data)
 	{
 		var ln = data.length;
 		console.log(data);
-		var maxy = d3.max(data, function(d){ return d.info2; });
-		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.info2*(height/maxy)});
+		var maxy = d3.max(data, function(d){ return d.info; });
+		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.info*(height/maxy)});
 		ctrl.append("path").data([data]).attr("d", lines).attr("stroke", "red").attr("fill", "none");
 	}
 
