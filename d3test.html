@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<style type="text/css" id="parrottalks-notetaker-style">      html > body.evernote_clearly__before_visible #parrottalks-notetaker > iframe,      html > body.clearlyBeforeVisible #parrottalks-notetaker > iframe:not(#evernoteGlobalTools):not(#evernoteOptionsPage):not(#evernoteClearlyArticle) {        visibility: visible !important;      }      .evernote_clearly__before_visible #evernote_clearly__reformat,      .clearlyBeforeVisible #evernoteClearlyArticle {        z-index: 2147483646 !important;      }    </style>
+</head>
+<body>
+<script type="text/javascript">
+	var width = 1024;
+var height = 768;
+var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
+d3.csv("./data.csv", 
+	function(data)
+	{
+		var ln = data.length;
+		console.log(data);
+		var maxy = d3.max(data, function(d){ return d.info; });
+		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.info*(height/maxy)});
+		ctrl.append("path").data([data]).attr("d", lines).attr("stroke", "red").attr("fill", "none");
+	}
+
+);
+</script>
+<svg width="1024" height="768"><path d=stroke="red" fill="none"></path></svg>
+</body>
+</html>
+
