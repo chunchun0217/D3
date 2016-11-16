@@ -3,6 +3,9 @@
 <head>
 	<title></title>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="d3.js"></script>
+	<script src="d3.layout.cloud.js"></script>
+	<script src="d3.wordcloud.js"></script>
 	
 </head>
 <body>
@@ -14,6 +17,12 @@ d3.csv("./word.csv",
 	{
 		console.log(data);
 	}
+       
+       d3.wordcloud()
+        .size([800, 400])
+        .selector('#cloud')
+        .words(data)
+        .start();
 );
 </script>
 </body>
