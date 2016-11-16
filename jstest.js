@@ -2,7 +2,7 @@ function jstest(){
 
 var width = 1024;
 var height = 1000;
-var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
+var ctrl = d3.select(".article").append("svg").attr("width", width).attr("height", height);
 d3.csv("./information.csv", 
 	function(data)
 	{
