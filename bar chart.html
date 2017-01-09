@@ -1,0 +1,132 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+    <script>
+    var height = 600;
+    var width = 600;
+    var mid = 200;
+    var fontSize = "12px";
+    var rawData = [];
+    var data = [];
+    
+
+    d3.csv("https://raw.githubusercontent.com/chunchun0217/D3_FinalProject/master/cwurData.csv", function(csv) {
+        rawData = d3.nest()
+            .key(function(d) {
+                return d.institution;
+            })
+            .entries(csv);
+
+        for (var i = 0; i < rawData.length; i++) {
+            if (rawData[i].values.length == 4) {
+                var temp = +rawData[i].values[0].world_rank - +rawData[i].values[3].world_rank;
+                if (temp > 0) {
+                    var content = new Object();
+                    content.institution = rawData[i].key;
+                    content.progress = temp;
+
+                    if (temp <= 5) {
+                        content.category = "#EFC050";
+                    } else if (temp > 5 && temp <= 10) {
+                        content.category = "#45B8AC";
+                    } else {
+                        content.category = "#D65076";
+                    }
+                    data.push(content);
+                }
+            }
+        }
+
+        data.sort(function(a, b) {
+            return parseInt(b.progress) - parseInt(a.progress);
+        })
+
+        var height_rect = height / (data.length * 1.5);
+
+        var s = d3.select('body')
+            .append('svg')
+            .attr({
+                'width': width,
+                'height': height
+            });
+
+        s.selectAll('rect')
+            .data(data)
+            .enter()
+            .append('rect')
+            .attr({
+                'fill': '#09c',
+                'width': 0,
+                'height': height_rect,
+                'x': mid,
+                'y': function(d, i) {
+                    return i * height_rect * 1.2;
+                }
+            })
+            .transition()
+            .duration(1500)
+            .attr({
+                'width': function(d, i) {
+                    return data[i].progress * 3;
+                }
+            })
+             .style("fill", function(d, i) {
+                return data[i].category;
+            });
+        //the name of university
+        s.selectAll('text.title')
+            .data(data)
+            .enter()
+            .append('text')
+            .text(function(d, i) {
+                return data[i].institution;
+            })
+            .attr({
+                'fill': '#000',
+                'font-family': "sans-serif",
+                'text-anchor': "end",
+                'font-size': fontSize,
+                'x': mid - 5,
+                'y': function(d, i) {
+                    return i * height_rect * 1.2 + height_rect * 0.8;
+                }
+            });
+
+        s.selectAll('text.value')
+            .data(data)
+            .enter()
+            .append('text')
+            .text(function(d, i) {
+                return data[i].progress * 3;
+            })
+            .attr({
+                'fill': '#000',
+                'font-size': fontSize,
+                'x': mid,
+                'y': function(d, i) {
+                    return i * height_rect * 1.2 + height_rect * 0.75;
+                }
+            })
+            .transition()
+            .duration(1500)
+            .attr({
+                'x': function(d, i) {
+                    return data[i].progress * 3 + mid + 5;
+                }
+            })
+            .tween('number', function(d, i) {
+                var j = d3.interpolateRound(0, data[i].progress);
+                return function(t) {
+                    this.textContent = j(t);
+                }
+            });
+    })
+    </script>
+</body>
+
+</html>
